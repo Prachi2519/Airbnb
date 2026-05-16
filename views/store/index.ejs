@@ -1,0 +1,55 @@
+<%- include('../partials/head') %>
+  </head>
+  <body>
+    <%- include('../partials/nav') %>
+    <main>
+      <section class="section-shell grid items-center gap-10 pb-6 pt-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div>
+          <%- include('../partials/flash') %>
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-rose-700">Curated stays</p>
+          <h1 class="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-6xl">
+            Book beautiful stays with dates that actually work.
+          </h1>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+            Search polished homes, compare full trip prices, save favourites, and book confirmed stays with a calendar-aware flow.
+          </p>
+          <div class="mt-8">
+            <%- include('../partials/search-bar', { filters: filters }) %>
+          </div>
+        </div>
+        <% const heroHome = registeredHomes && registeredHomes.length ? registeredHomes[0] : null; %>
+        <div class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-xl">
+          <% if (heroHome) { %>
+            <img src="<%= assetPath((heroHome.images && heroHome.images[0]) || heroHome.photo) %>" alt="<%= heroHome.houseName %>" class="h-80 w-full object-cover sm:h-[28rem]" />
+            <div class="flex items-center justify-between gap-4 p-5">
+              <div class="min-w-0">
+                <p class="truncate text-lg font-semibold"><%= heroHome.houseName %></p>
+                <p class="truncate text-sm text-slate-500"><%= heroHome.location %></p>
+              </div>
+              <p class="shrink-0 text-sm font-semibold"><%= formatCurrency(heroHome.price) %> / night</p>
+            </div>
+          <% } else { %>
+            <div class="flex h-80 items-center justify-center bg-stone-100 p-8 text-center text-slate-500">
+              Add your first host listing to bring the marketplace to life.
+            </div>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="section-shell pt-4">
+        <div class="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-rose-700">Featured</p>
+            <h2 class="mt-1 text-2xl font-bold tracking-tight text-slate-950">Homes guests love</h2>
+          </div>
+          <a href="/homes" class="hidden text-sm font-semibold text-rose-700 hover:text-rose-800 sm:inline">View all</a>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <% registeredHomes.forEach(home => { %>
+            <%- include('../partials/home-card', { home: home, showFavourite: isLoggedIn && user && user.userType === 'guest' }) %>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

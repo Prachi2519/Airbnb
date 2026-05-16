@@ -1,0 +1,46 @@
+<%- include('../partials/head') %>
+  </head>
+  <body>
+    <%- include('../partials/nav') %>
+    <main class="section-shell">
+      <%- include('../partials/flash') %>
+      <div class="mb-8">
+        <p class="text-sm font-semibold text-rose-700">Saved</p>
+        <h1 class="mt-1 text-3xl font-bold tracking-tight text-slate-950">Your favourite homes</h1>
+        <p class="mt-2 max-w-2xl text-slate-600">A focused shortlist for stays worth coming back to.</p>
+      </div>
+
+      <% if (favouriteHomes.length === 0) { %>
+        <div class="rounded-lg border border-dashed border-stone-300 bg-white p-10 text-center">
+          <h2 class="text-xl font-semibold text-slate-950">No saved homes yet</h2>
+          <p class="mt-2 text-slate-600">Save homes while exploring so your best options stay close.</p>
+          <a href="/homes" class="btn-primary mt-6">Explore homes</a>
+        </div>
+      <% } else { %>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <% favouriteHomes.forEach(home => { %>
+            <article class="overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm">
+              <a href="/homes/<%= home._id %>">
+                <img src="<%= assetPath((home.images && home.images[0]) || home.photo) %>" alt="<%= home.houseName %>" class="aspect-[4/3] w-full object-cover" />
+              </a>
+              <div class="space-y-4 p-4">
+                <div>
+                  <h3 class="truncate text-base font-semibold text-slate-950"><%= home.houseName %></h3>
+                  <p class="mt-1 truncate text-sm text-slate-500"><%= home.location %></p>
+                  <p class="mt-2 text-xs font-medium text-slate-500"><%= home.maxGuests || 2 %> guests · <%= home.bedrooms || 1 %> bedrooms</p>
+                </div>
+                <div class="flex items-center justify-between">
+                  <p class="font-bold text-slate-950"><%= formatCurrency(home.price) %> <span class="text-sm font-medium text-slate-500">night</span></p>
+                  <p class="text-sm font-semibold text-amber-700"><%= home.rating %> rating</p>
+                </div>
+                <form action="/favourites/delete/<%= home._id %>" method="POST">
+                  <button class="btn-secondary w-full" type="submit">Remove</button>
+                </form>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      <% } %>
+    </main>
+  </body>
+</html>

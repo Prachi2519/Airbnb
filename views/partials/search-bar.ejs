@@ -1,0 +1,38 @@
+<form action="/homes" method="GET" class="rounded-lg border border-stone-200 bg-white p-3 shadow-sm">
+  <div class="grid gap-3 md:grid-cols-[1.3fr_1fr_1fr_0.7fr_0.8fr_0.8fr_0.9fr_auto]">
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Where</span>
+      <input name="location" value="<%= filters.location || '' %>" class="field py-2.5" placeholder="Goa, Jaipur, Manali" />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Check in</span>
+      <input type="date" name="checkIn" value="<%= filters.checkIn || '' %>" class="field py-2.5" />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Check out</span>
+      <input type="date" name="checkOut" value="<%= filters.checkOut || '' %>" class="field py-2.5" />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Guests</span>
+      <input type="number" min="1" name="guests" value="<%= filters.guests || '' %>" class="field py-2.5" placeholder="2" />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Min</span>
+      <input type="number" min="0" name="minPrice" value="<%= filters.minPrice || '' %>" class="field py-2.5" placeholder="Rs" />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Max</span>
+      <input type="number" min="0" name="maxPrice" value="<%= filters.maxPrice || '' %>" class="field py-2.5" placeholder="Rs" />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Sort</span>
+      <select name="sort" class="field py-2.5">
+        <option value="recommended" <%= filters.sort === 'recommended' ? 'selected' : '' %>>Recommended</option>
+        <option value="rating" <%= filters.sort === 'rating' ? 'selected' : '' %>>Top rated</option>
+        <option value="price-low" <%= filters.sort === 'price-low' ? 'selected' : '' %>>Price low</option>
+        <option value="price-high" <%= filters.sort === 'price-high' ? 'selected' : '' %>>Price high</option>
+      </select>
+    </label>
+    <button class="btn-primary self-end">Search</button>
+  </div>
+</form>

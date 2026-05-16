@@ -1,0 +1,39 @@
+{
+  "name": "airbnb",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./views/input.css -o ./public/output.css --minify",
+    "dev:css": "tailwindcss -i ./views/input.css -o ./public/output.css --watch",
+    "dev": "concurrently \"nodemon app.js\" \"npm run dev:css\"",
+    "seed": "node scripts/seed-demo.js",
+    "start": "node app.js",
+    "test": "node --check app.js && node --check controllers/storeController.js && node --check controllers/hostController.js && node --check controllers/authController.js && node --check services/bookingService.js && node --check services/listingService.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body": "^5.1.0",
+    "concurrently": "^9.2.1",
+    "connect-mongodb-session": "^5.0.0",
+    "dotenv": "^17.4.2",
+    "ejs": "^4.0.1",
+    "express": "^4.21.0",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.3.2",
+    "mongodb": "^7.2.0",
+    "mongoose": "^9.6.2",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.3",
+    "parser": "^0.1.4"
+  }
+}

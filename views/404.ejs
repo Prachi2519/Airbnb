@@ -1,0 +1,14 @@
+<%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/nav') %>
+    <main class="section-shell flex min-h-[calc(100vh-5rem)] items-center justify-center">
+      <section class="max-w-xl text-center">
+        <p class="text-sm font-semibold text-rose-700"><%= currentPage === "500" ? "500" : "404" %></p>
+        <h1 class="mt-3 text-4xl font-bold tracking-tight text-slate-950"><%= currentPage === "500" ? "Something went wrong." : "This page is not available." %></h1>
+        <p class="mt-4 text-slate-600"><%= currentPage === "500" ? "Please try again after a moment." : "The link may be broken, or the page may have moved." %></p>
+        <a href="/" class="btn-primary mt-8">Go home</a>
+      </section>
+    </main>
+  </body>
+</html>

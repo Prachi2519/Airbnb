@@ -1,0 +1,38 @@
+<%- include('../partials/head') %>
+  </head>
+  <body>
+    <%- include('../partials/nav') %>
+    <main class="section-shell">
+      <%- include('../partials/flash') %>
+      <div class="mb-6">
+        <p class="text-sm font-semibold text-rose-700">Explore</p>
+        <h1 class="mt-1 text-3xl font-bold tracking-tight text-slate-950">Available homes</h1>
+        <p class="mt-2 max-w-2xl text-slate-600">Filter by location, dates, guests, price, and rating.</p>
+      </div>
+
+      <div class="mb-8">
+        <%- include('../partials/search-bar', { filters: filters }) %>
+      </div>
+
+      <div class="mb-5 flex items-center justify-between">
+        <p class="text-sm font-medium text-slate-600"><%= registeredHomes.length %> listings found</p>
+        <% if (filters.location || filters.checkIn || filters.checkOut || filters.guests || filters.minPrice || filters.maxPrice) { %>
+          <a href="/homes" class="text-sm font-semibold text-rose-700 hover:text-rose-800">Clear filters</a>
+        <% } %>
+      </div>
+
+      <% if (registeredHomes.length === 0) { %>
+        <div class="rounded-lg border border-dashed border-stone-300 bg-white p-10 text-center">
+          <h2 class="text-xl font-semibold text-slate-950">No stays match your search</h2>
+          <p class="mt-2 text-slate-600">Try a nearby location, wider price range, or fewer guests.</p>
+        </div>
+      <% } else { %>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <% registeredHomes.forEach(home => { %>
+            <%- include('../partials/home-card', { home: home, showFavourite: isLoggedIn && user && user.userType === 'guest' }) %>
+          <% }) %>
+        </div>
+      <% } %>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<article class="group overflow-hidden rounded-lg border border-stone-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl">
+  <a href="/homes/<%= home._id %>" class="block">
+    <div class="aspect-[4/3] overflow-hidden bg-stone-100">
+      <img src="<%= assetPath((home.images && home.images[0]) || home.photo) %>" alt="<%= home.houseName %>" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+    </div>
+  </a>
+  <div class="space-y-4 p-4">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <h3 class="truncate text-base font-semibold text-slate-950"><%= home.houseName %></h3>
+        <p class="mt-1 truncate text-sm text-slate-500"><%= home.location %></p>
+        <p class="mt-2 text-xs font-medium text-slate-500"><%= home.maxGuests || 2 %> guests · <%= home.bedrooms || 1 %> bedrooms · <%= home.bathrooms || 1 %> baths</p>
+      </div>
+      <div class="flex shrink-0 items-center gap-1 text-sm font-semibold text-slate-900">
+        <svg class="h-4 w-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="m12 2.8 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5-4.7-4.6 6.5-.9L12 2.8Z" />
+        </svg>
+        <%= home.rating %>
+      </div>
+    </div>
+    <div class="flex items-center justify-between gap-3">
+      <p class="text-sm text-slate-500"><span class="text-lg font-bold text-slate-950">Rs <%= home.price %></span> night</p>
+      <a href="/homes/<%= home._id %>" class="text-sm font-semibold text-rose-700 hover:text-rose-800">View details</a>
+    </div>
+    <% if (home.amenities && home.amenities.length > 0) { %>
+      <div class="flex flex-wrap gap-2">
+        <% home.amenities.slice(0, 3).forEach(amenity => { %>
+          <span class="badge"><%= amenity %></span>
+        <% }) %>
+      </div>
+    <% } %>
+    <% if (typeof showFavourite !== 'undefined' && showFavourite) { %>
+      <%- include('favourite', { home: home }) %>
+    <% } %>
+  </div>
+</article>

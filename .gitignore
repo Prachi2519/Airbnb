@@ -1,0 +1,6 @@
+node_modules/
+.env
+tmp-cookies.txt
+uploads/*
+!uploads/.gitkeep
+smoke-server.log

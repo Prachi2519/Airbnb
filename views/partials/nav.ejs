@@ -1,0 +1,81 @@
+<header class="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8" aria-label="Primary">
+    <a href="/" class="flex min-w-0 items-center gap-2 text-slate-950">
+      <span class="flex h-9 w-9 items-center justify-center rounded-md bg-rose-600 text-white">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 3.2 3.8 10.6v9.2h5.1v-5.6h6.2v5.6h5.1v-9.2L12 3.2Z" />
+        </svg>
+      </span>
+      <span class="truncate text-lg font-semibold tracking-tight">StayNest</span>
+    </a>
+
+    <button
+      id="mobile-menu-button"
+      type="button"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 text-slate-700 md:hidden"
+      aria-label="Open navigation"
+      aria-expanded="false"
+    >
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+
+    <div class="hidden items-center gap-2 md:flex">
+      <a href="/" class="nav-link <%= currentPage === 'index' ? 'nav-link-active' : '' %>">Discover</a>
+      <% if (isLoggedIn && user && user.userType === 'guest') { %>
+        <a href="/homes" class="nav-link <%= currentPage === 'Home' ? 'nav-link-active' : '' %>">Homes</a>
+        <a href="/favourites" class="nav-link <%= currentPage === 'favourites' ? 'nav-link-active' : '' %>">Saved</a>
+        <a href="/bookings" class="nav-link <%= currentPage === 'bookings' ? 'nav-link-active' : '' %>">Trips</a>
+      <% } %>
+      <% if (isLoggedIn && user && user.userType === 'host') { %>
+        <a href="/host/host-home-list" class="nav-link <%= currentPage === 'host-homes' ? 'nav-link-active' : '' %>">Dashboard</a>
+        <a href="/host/add-home" class="nav-link <%= currentPage === 'addHome' ? 'nav-link-active' : '' %>">New listing</a>
+      <% } %>
+    </div>
+
+    <div class="hidden items-center gap-3 md:flex">
+      <% if (!isLoggedIn) { %>
+        <a href="/login" class="btn-secondary">Log in</a>
+        <a href="/signup" class="btn-primary">Get started</a>
+      <% } else { %>
+        <span class="max-w-40 truncate text-sm font-medium text-slate-600"><%= user.firstName %></span>
+        <form action="/logout" method="POST">
+          <button type="submit" class="btn-secondary">Log out</button>
+        </form>
+      <% } %>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="hidden border-t border-stone-200 bg-white px-4 py-3 md:hidden">
+    <div class="flex flex-col gap-2">
+      <a href="/" class="mobile-nav-link">Discover</a>
+      <% if (isLoggedIn && user && user.userType === 'guest') { %>
+        <a href="/homes" class="mobile-nav-link">Homes</a>
+        <a href="/favourites" class="mobile-nav-link">Saved</a>
+        <a href="/bookings" class="mobile-nav-link">Trips</a>
+      <% } %>
+      <% if (isLoggedIn && user && user.userType === 'host') { %>
+        <a href="/host/host-home-list" class="mobile-nav-link">Dashboard</a>
+        <a href="/host/add-home" class="mobile-nav-link">New listing</a>
+      <% } %>
+      <% if (!isLoggedIn) { %>
+        <a href="/login" class="mobile-nav-link">Log in</a>
+        <a href="/signup" class="btn-primary mt-2 text-center">Get started</a>
+      <% } else { %>
+        <form action="/logout" method="POST" class="pt-2">
+          <button type="submit" class="mobile-nav-link w-full text-left">Log out</button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</header>
+
+<script>
+  const mobileMenuButton = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+  mobileMenuButton?.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+    mobileMenuButton.setAttribute("aria-expanded", String(!mobileMenu.classList.contains("hidden")));
+  });
+</script>

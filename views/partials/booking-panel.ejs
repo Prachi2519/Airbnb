@@ -1,0 +1,107 @@
+<aside class="rounded-lg border border-stone-200 bg-white p-5 shadow-xl lg:sticky lg:top-24">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p class="text-2xl font-bold text-slate-950"><%= formatCurrency(home.price) %></p>
+      <p class="text-sm text-slate-500">per night</p>
+    </div>
+    <p class="rounded-md bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-800"><%= home.rating %> rating</p>
+  </div>
+
+  <% if (isLoggedIn && user && user.userType === 'guest') { %>
+    <form action="/bookings/<%= home._id %>" method="POST" class="mt-5 space-y-4" data-booking-form data-unavailable='<%- JSON.stringify(unavailableDates || []) %>' data-price="<%= home.price %>">
+      <%- include('errors') %>
+      <div class="grid grid-cols-2 gap-3">
+        <label>
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Check in</span>
+          <input type="date" name="checkIn" value="<%= oldInput.checkIn || '' %>" min="<%= new Date().toISOString().slice(0, 10) %>" class="field" required />
+        </label>
+        <label>
+          <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Check out</span>
+          <input type="date" name="checkOut" value="<%= oldInput.checkOut || '' %>" min="<%= new Date().toISOString().slice(0, 10) %>" class="field" required />
+        </label>
+      </div>
+      <label>
+        <span class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Guests</span>
+        <input type="number" name="guestCount" value="<%= oldInput.guestCount || 1 %>" min="1" max="<%= home.maxGuests || 1 %>" class="field" required />
+      </label>
+      <div class="rounded-md bg-stone-50 p-4 text-sm text-slate-700">
+        <div class="flex justify-between"><span>Nightly rate</span><span><%= formatCurrency(home.price) %></span></div>
+        <div class="mt-2 flex justify-between"><span>Nights</span><span data-nights>Choose dates</span></div>
+        <div class="mt-2 flex justify-between"><span>Cleaning fee</span><span data-cleaning>-</span></div>
+        <div class="mt-2 flex justify-between"><span>Service fee</span><span data-service>-</span></div>
+        <div class="mt-3 border-t border-stone-200 pt-3 flex justify-between font-bold text-slate-950"><span>Total</span><span data-total>-</span></div>
+      </div>
+      <p class="hidden rounded-md bg-rose-50 p-3 text-sm text-rose-800" data-date-error></p>
+      <button type="submit" class="btn-primary w-full">Book stay</button>
+    </form>
+  <% } else if (!isLoggedIn) { %>
+    <a href="/login" class="btn-primary mt-5 w-full">Log in to book</a>
+  <% } else { %>
+    <p class="mt-5 rounded-md bg-stone-50 p-4 text-sm text-slate-600">Hosts can preview booking details here. Log in as a guest to reserve stays.</p>
+  <% } %>
+
+  <% if (unavailableDates && unavailableDates.length > 0) { %>
+    <div class="mt-5">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Unavailable dates</p>
+      <div class="mt-2 flex max-h-24 flex-wrap gap-2 overflow-auto">
+        <% unavailableDates.slice(0, 24).forEach(date => { %>
+          <span class="rounded-md bg-stone-100 px-2 py-1 text-xs text-slate-600"><%= date %></span>
+        <% }) %>
+      </div>
+    </div>
+  <% } %>
+</aside>
+
+<script>
+  document.querySelectorAll("[data-booking-form]").forEach((form) => {
+    const unavailable = new Set(JSON.parse(form.dataset.unavailable || "[]"));
+    const price = Number(form.dataset.price || 0);
+    const checkIn = form.querySelector("[name='checkIn']");
+    const checkOut = form.querySelector("[name='checkOut']");
+    const error = form.querySelector("[data-date-error]");
+    const nightsNode = form.querySelector("[data-nights]");
+    const cleaningNode = form.querySelector("[data-cleaning]");
+    const serviceNode = form.querySelector("[data-service]");
+    const totalNode = form.querySelector("[data-total]");
+    const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+
+    const keysBetween = (start, end) => {
+      const keys = [];
+      for (let time = start.getTime(); time < end.getTime(); time += 86400000) {
+        keys.push(new Date(time).toISOString().slice(0, 10));
+      }
+      return keys;
+    };
+
+    const update = () => {
+      error.classList.add("hidden");
+      if (!checkIn.value || !checkOut.value) return;
+      const start = new Date(`${checkIn.value}T00:00:00.000Z`);
+      const end = new Date(`${checkOut.value}T00:00:00.000Z`);
+      const nights = Math.round((end - start) / 86400000);
+
+      if (nights < 1) {
+        error.textContent = "Check-out must be after check-in.";
+        error.classList.remove("hidden");
+        return;
+      }
+
+      const conflict = keysBetween(start, end).some((key) => unavailable.has(key));
+      if (conflict) {
+        error.textContent = "One or more selected nights are unavailable.";
+        error.classList.remove("hidden");
+      }
+
+      const cleaning = Math.max(499, Math.round(price * 0.08));
+      const service = Math.round(price * nights * 0.12);
+      nightsNode.textContent = nights;
+      cleaningNode.textContent = inr.format(cleaning);
+      serviceNode.textContent = inr.format(service);
+      totalNode.textContent = inr.format(price * nights + cleaning + service);
+    };
+
+    checkIn.addEventListener("change", update);
+    checkOut.addEventListener("change", update);
+    update();
+  });
+</script>
