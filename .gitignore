@@ -1,6 +1,29 @@
 node_modules/
+
+# Environment secrets
 .env
+.env.*
+!.env.example
+
+# Runtime / generated files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+coverage/
+.nyc_output/
+.cache/
+dist/
+build/
 tmp-cookies.txt
+smoke-server.log
+
+# User uploads
 uploads/*
 !uploads/.gitkeep
-smoke-server.log
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
